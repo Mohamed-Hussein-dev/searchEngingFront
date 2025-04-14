@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <title>Drug Search</title>
+   <style>
+      body {
+         font-family: Arial, sans-serif;
+         padding: 20px;
+         background: #f5f5f5;
+      }
+
+      .search-form {
+         margin-bottom: 20px;
+      }
+
+      .search-form input {
+         padding: 10px;
+         margin-right: 10px;
+         width: 200px;
+      }
+
+      .search-form button {
+         padding: 10px 20px;
+         cursor: pointer;
+      }
+
+      .note {
+         margin-top: 10px;
+         font-size: 14px;
+         color: #555;
+      }
+
+      .cards-container {
+         margin-top: 30px;
+         display: flex;
+         flex-wrap: wrap;
+         gap: 20px;
+         justify-content: center;
+      }
+
+      .card {
+         display: flex;
+         background: white;
+         border-radius: 8px;
+         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+         width: 500px;
+         overflow: hidden;
+         transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .card:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .card img {
+         width: 150px;
+         height: 150px;
+         object-fit: cover;
+      }
+
+      .card-info {
+         padding: 15px;
+         flex-grow: 1;
+      }
+
+      .card-info h3 {
+         margin-top: 0;
+         margin-bottom: 10px;
+      }
+
+      .card-info p {
+         margin: 5px 0;
+      }
+
+      .loading {
+         display: none;
+         margin: 30px auto;
+         border: 8px solid #f3f3f3;
+         border-top: 8px solid #3498db;
+         border-radius: 50%;
+         width: 60px;
+         height: 60px;
+         animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+         0% {
+            transform: rotate(0deg);
+         }
+
+         100% {
+            transform: rotate(360deg);
+         }
+      }
+
+      .no-results {
+         text-align: center;
+         color: #888;
+         margin-top: 20px;
+         font-size: 18px;
+      }
+   </style>
+</head>
+
+<body>
+
+   <h1>Drug Search</h1>
+
+   <div class="search-form">
+      <input type="text" id="name" placeholder="Enter drug name">
+      <input type="number" id="tolerance" placeholder="Enter tolerance">
+      <button onclick="search()">Search</button>
+      <div class="note">
+         Note: If you don't find the drug you are searching for, it might not exist in our database.
+      </div>
+   </div>
+
+   <div class="loading" id="loading"></div>
+
+   <div class="cards-container" id="results">
+      <!-- Results will appear here -->
+   </div>
+
+   <script>
+      async function search() {
+         const name = document.getElementById('name').value;
+         const tolerance = document.getElementById('tolerance').value;
+         const loading = document.getElementById('loading');
+         const resultsDiv = document.getElementById('results');
+
+         if (!name || !tolerance) {
+            alert('Please fill in both fields.');
+            return;
+         }
+
+         resultsDiv.innerHTML = '';
+         loading.style.display = 'block'; // Show loading spinner
+
+         try {
+            const response = await fetch(`https://localhost:7285/api/SearchEngine/search?name=${name}&tolerance=${tolerance}`);
+            const data = await response.json();
+
+            loading.style.display = 'none'; // Hide loading spinner
+
+            if (data.length === 0) {
+               resultsDiv.innerHTML = '<div class="no-results">No results found.</div>';
+               return;
+            }
+
+            data.forEach(item => {
+               const card = document.createElement('div');
+               card.className = 'card';
+
+               const img = document.createElement('img');
+               img.src = item.imageURL ? item.imageURL : 'https://via.placeholder.com/150'; // Fallback if no image
+
+               const info = document.createElement('div');
+               info.className = 'card-info';
+
+               info.innerHTML = `
+                        <h3>${item.englishName}</h3>
+                        <p><strong>Description:</strong> ${item.description}</p>
+                        <p><strong>Price:</strong> ${item.price} EGP</p>
+                        <p><strong>Active Ingredient:</strong> ${item.activeIngredient}</p>
+                        <p><strong>Barcode:</strong> ${item.barCode}</p>
+                    `;
+
+               card.appendChild(img);
+               card.appendChild(info);
+
+               resultsDiv.appendChild(card);
+            });
+         } catch (error) {
+            console.error('Error fetching data:', error);
+            loading.style.display = 'none';
+            resultsDiv.innerHTML = '<div class="no-results">Something went wrong. Please try again later.</div>';
+         }
+      }
+   </script>
+
+</body>
+
+</html>
