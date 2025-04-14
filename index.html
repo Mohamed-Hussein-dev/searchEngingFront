@@ -140,7 +140,7 @@
          loading.style.display = 'block'; // Show loading spinner
 
          try {
-            const response = await fetch(`https://localhost:7285/api/SearchEngine/search?name=${name}&tolerance=${tolerance}`);
+            const response = await fetch(`http://search-engine-api.runasp.net/api/SearchEngine/search?name=${name}&tolerance=${tolerance}`);
             const data = await response.json();
 
             loading.style.display = 'none'; // Hide loading spinner
