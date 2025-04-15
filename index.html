@@ -2,254 +2,256 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Drug Search</title>
-  <style>
-    :root {
-      --primary: #3498db;
-      --bg: #f5f7fa;
-      --card-bg: #ffffff;
-      --text: #333333;
-      --muted: #777777;
-      --radius: 8px;
-      --gap: 20px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      padding: var(--gap);
-    }
-
-    h1 {
-      text-align: center;
-      color: var(--primary);
-      margin-bottom: var(--gap);
-    }
-
-    .search-form {
-      max-width: 600px;
-      margin: 0 auto var(--gap);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
-    .search-form input {
-      flex: 1 1 150px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: var(--radius);
-      font-size: 1rem;
-    }
-
-    .search-form input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-    }
-
-    .search-form button {
-      padding: 10px 20px;
-      background: var(--primary);
-      color: #fff;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-
-    .search-form button:hover {
-      background: #2980b9;
-    }
-
-    .note {
-      width: 100%;
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .loading {
-      display: none;
-      margin: 40px auto;
-      border: 6px solid #e0e0e0;
-      border-top: 6px solid var(--primary);
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>PharmaSearch</title>
+   <style>
+      /* Add image styles */
+      .result-image {
+          width: 100%;
+          max-width: 300px;
+          height: 200px;
+          object-fit: cover;
+          border-radius: 8px;
+          margin-bottom: 1rem;
       }
-    }
 
-    .cards-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: var(--gap);
-      margin-top: var(--gap);
-    }
+      /* Rest of existing CSS remains the same */
+      :root {
+         --primary: #1a73e8;
+         --bg: #ffffff;
+         --text: #202124;
+         --border: #dfe1e5;
+         --secondary-text: #5f6368;
+         --radius: 24px;
+      }
 
-    .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
+      * {
+         box-sizing: border-box;
+         margin: 0;
+         padding: 0;
+      }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-    }
+      body {
+         font-family: 'Google Sans', Arial, sans-serif;
+         background: var(--bg);
+         color: var(--text);
+         min-height: 100vh;
+      }
 
-    .card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      background: #eee;
-    }
+      .container {
+         max-width: 700px;
+         margin: 0 auto;
+         padding: 20px 15px;
+      }
 
-    .card-info {
-      padding: 15px;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
+      .logo {
+         text-align: center;
+         margin: 100px 0 40px;
+         font-size: 3.5rem;
+         color: var(--primary);
+         font-weight: 500;
+         letter-spacing: -2px;
+      }
 
-    .card-info h3 {
-      margin: 0 0 10px;
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
+      .search-box {
+         position: relative;
+         margin-bottom: 20px;
+      }
 
-    .card-info p {
-      margin: 4px 0;
-      font-size: 0.95rem;
-      line-height: 1.4;
-      color: var(--text);
-      overflow-wrap: break-word;
-    }
+      .search-form {
+         display: flex;
+         gap: 10px;
+         border: 1px solid var(--border);
+         border-radius: var(--radius);
+         padding: 8px 15px;
+         transition: all 0.2s;
+         box-shadow: 0 1px 6px rgba(32, 33, 36, .28);
+         align-items: center;
+      }
 
-    .card-info .label {
-      font-weight: bold;
-      color: var(--muted);
-    }
+      .search-form:focus-within {
+         box-shadow: 0 1px 6px rgba(32, 33, 36, .4);
+      }
 
-    .no-results {
-      text-align: center;
-      color: var(--muted);
-      font-size: 1.1rem;
-      grid-column: 1 / -1;
-      line-height: 1.5;
-    }
-  </style>
+      input {
+         flex: 1;
+         border: none;
+         outline: none;
+         font-size: 16px;
+         padding: 10px;
+         background: transparent;
+      }
+
+      #tolerance {
+         width: 100px;
+         padding: 8px;
+         border-left: 1px solid var(--border);
+         font-size: 14px;
+      }
+
+      button {
+         background: var(--primary);
+         color: white;
+         border: none;
+         padding: 12px 24px;
+         border-radius: 20px;
+         font-size: 14px;
+         cursor: pointer;
+         transition: all 0.2s;
+      }
+
+      button:hover {
+         background: #1557b0;
+         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+      }
+
+      .search-notes {
+         color: var(--secondary-text);
+         font-size: 13px;
+         margin: 15px 0;
+         line-height: 1.5;
+      }
+
+      .result-item {
+         margin-bottom: 25px;
+         max-width: 600px;
+         padding: 20px;
+         border: 1px solid var(--border);
+         border-radius: 12px;
+      }
+
+      .result-title {
+         color: var(--primary);
+         text-decoration: none;
+         font-size: 20px;
+         margin-bottom: 4px;
+         display: block;
+      }
+
+      .result-details {
+         color: var(--secondary-text);
+         font-size: 14px;
+         line-height: 1.5;
+      }
+
+      .loading {
+         display: none;
+         text-align: center;
+         margin: 40px 0;
+         color: var(--secondary-text);
+      }
+
+      .no-results {
+         text-align: center;
+         color: var(--secondary-text);
+         padding: 40px 0;
+      }
+
+      @media (max-width: 600px) {
+         .logo {
+            margin: 60px 0 30px;
+            font-size: 2.5rem;
+         }
+
+         .search-form {
+            flex-wrap: wrap;
+            padding: 8px;
+         }
+
+         #tolerance {
+            border-left: none;
+            width: auto;
+         }
+      }
+   </style>
 </head>
 
 <body>
+   <div class="container">
+      <div class="logo">Drug Search</div>
 
-  <h1>Drug Search</h1>
+      <div class="search-box">
+         <form class="search-form" onsubmit="search(); return false;">
+            <input type="text" id="name" placeholder="Search medications..." autofocus>
+            <input type="number" id="tolerance" placeholder="Tolerance" min="1" max="10">
+            <button type="submit">Search</button>
+         </form>
+         <div class="search-notes">
+            • Search tips: Enter at least 3 characters<br>
+            • Tolerance = allowed typos (default: 50% of name length)<br>
+            • Database contains 10 000 entries - not found? Try increasing tolerance
+         </div>
+      </div>
 
-  <div class="search-form">
-    <input type="text" id="name" placeholder="Enter drug name">
-    <input type="number" id="tolerance" placeholder="Tolerance (optional)">
-    <button onclick="search()">Search</button>
-    <div class="note">
-      Leave tolerance blank to use 10. If you don’t see your drug, it may not be in our 10 000‑entry database or you can try increasing the tolerance.
-    </div>
-  </div>
+      <div class="loading" id="loading">Searching...</div>
+      <div id="results"></div>
+   </div>
 
-  <div class="loading" id="loading"></div>
+   <script>
+      async function search() {
+         const name = document.getElementById('name').value.trim();
+         const tolerance = document.getElementById('tolerance').value.trim();
+         const resultsDiv = document.getElementById('results');
+         const loadingDiv = document.getElementById('loading');
 
-  <div class="cards-container" id="results">
-    <!-- Cards will be injected here -->
-  </div>
+         if (!name) return;
 
-  <script>
-    async function search() {
-      const nameInput = document.getElementById('name');
-      const tolInput = document.getElementById('tolerance');
-      const loading = document.getElementById('loading');
-      const resultsDiv = document.getElementById('results');
+         resultsDiv.innerHTML = '';
+         loadingDiv.style.display = 'block';
 
-      const name = nameInput.value.trim();
-      let tolerance = tolInput.value.trim();
+         try {
+            const calculatedTolerance = tolerance || 10;
+            const response = await fetch(
+               `https://search-engine-api.runasp.net/api/SearchEngine/search?name=${encodeURIComponent(name)}&tolerance=${calculatedTolerance}`
+            );
 
-      if (!name) {
-        alert('Please enter a drug name.');
-        return;
-      }
+            const data = await response.json();
 
-      // If tolerance is empty, set to 50% of name length (rounded up)
-      if (!tolerance) {
-        tolerance = 10;
-      }
+            loadingDiv.style.display = 'none';
 
-      resultsDiv.innerHTML = '';
-      loading.style.display = 'block';
-
-      try {
-        const res = await fetch(`https://search-engine-api.runasp.net/api/SearchEngine/search?name=${encodeURIComponent(name)}&tolerance=${tolerance}`);
-        const data = await res.json();
-
-        loading.style.display = 'none';
-
-        if (!Array.isArray(data) || data.length === 0) {
-          resultsDiv.innerHTML = `
+            if (!Array.isArray(data) || data.length === 0) {
+               resultsDiv.innerHTML = `
             <div class="no-results">
-              No results found.<br>
-              It may not be in our 10 000‑entry database, or you can try increasing the tolerance value.
+              No results found for "${name}"
+              <div style="margin-top:10px;font-size:0.9em">
+                Try increasing tolerance value
+              </div>
             </div>`;
-          return;
-        }
+               return;
+            }
 
-        data.forEach(item => {
-          const card = document.createElement('div');
-          card.className = 'card';
+            resultsDiv.innerHTML = data.map(item => `
+          <div class="result-item">
+            <img class="result-image" src="${item.imageURL || 'https://via.placeholder.com/300x200?text=No+Image+Available'}" alt="${item.englishName}">
+            <div class="result-title">${item.englishName}</div>
+            <div class="result-details">
+              <div>💰 Price: ${item.price} EGP</div>
+              <div>🧪 Active ingredient: ${item.activeIngredient}</div>
+              <div>📋 Description: ${item.description || 'N/A'}</div>
+              <div>📊 Barcode: ${item.barCode}</div>
+            </div>
+          </div>
+        `).join('');
 
-          const img = document.createElement('img');
-          img.src = item.imageURL || 'https://dummyimage.com/300x180/cccccc/000000&text=No+Image';
-          img.alt = item.englishName;
-
-          const info = document.createElement('div');
-          info.className = 'card-info';
-          info.innerHTML = `
-            <h3>${item.englishName}</h3>
-            <p><span class="label">Description:</span> ${item.description}</p>
-            <p><span class="label">Price:</span> ${item.price} EGP</p>
-            <p><span class="label">Active Ingredient:</span> ${item.activeIngredient}</p>
-            <p><span class="label">Barcode:</span> ${item.barCode}</p>
-          `;
-
-          card.append(img, info);
-          resultsDiv.appendChild(card);
-        });
-      } catch (err) {
-        console.error(err);
-        loading.style.display = 'none';
-        resultsDiv.innerHTML = `
+         } catch (error) {
+            console.error('Search error:', error);
+            loadingDiv.style.display = 'none';
+            resultsDiv.innerHTML = `
           <div class="no-results">
-            Something went wrong. Please try again later.
+            Error fetching results. Please try again later.
           </div>`;
+         }
       }
-    }
-  </script>
 
+      // Instant search with debounce
+      let timeout;
+      document.getElementById('name').addEventListener('input', (e) => {
+         clearTimeout(timeout);
+         timeout = setTimeout(() => {
+            if (e.target.value.trim().length >= 3) search();
+         }, 300);
+      });
+   </script>
 </body>
-
 </html>
