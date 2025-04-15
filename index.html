@@ -4,7 +4,7 @@
 <head>
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1" />
-   <title>Drug Search</title>
+   <title>Drugs Search</title>
    <style>
       :root {
          --primary: #1a73e8;
@@ -36,15 +36,15 @@
 
       .logo {
          text-align: center;
-         margin: 40px 0;
+         margin: 40px 0 20px;
          font-size: 2.5rem;
          color: var(--primary);
       }
 
       .search-box {
-         margin-bottom: 30px;
+         margin: 0 auto 30px;
          max-width: 800px;
-         margin: 0 auto;
+         padding: 0 15px;
       }
 
       .search-form {
@@ -55,6 +55,7 @@
          padding: 12px;
          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
          align-items: center;
+         flex-wrap: wrap;
       }
 
       input {
@@ -63,13 +64,11 @@
          outline: none;
          font-size: 16px;
          padding: 8px;
+         min-width: 100px;
       }
 
       .divider {
-         width: 1px;
-         background: var(--border);
-         height: 40px;
-         margin: 0 10px;
+         display: none;
       }
 
       button {
@@ -80,6 +79,7 @@
          border-radius: var(--radius);
          cursor: pointer;
          transition: background 0.2s;
+         flex-shrink: 0;
       }
 
       button:hover {
@@ -106,18 +106,18 @@
          display: grid;
          grid-template-columns: repeat(5, 1fr);
          gap: 20px;
-         padding: 20px 0;
+         padding: 20px 15px;
       }
 
       .result-item {
          border: 1px solid var(--border);
          border-radius: var(--radius);
-         padding: 15px;
+         padding: 12px;
          background: var(--bg);
          display: flex;
          flex-direction: column;
          justify-content: space-between;
-         height: 380px;
+         height: 360px;
          transition: transform 0.2s, box-shadow 0.2s;
       }
 
@@ -128,7 +128,7 @@
 
       .image-container {
          width: 100%;
-         height: 180px;
+         height: 160px;
          display: flex;
          align-items: center;
          justify-content: center;
@@ -187,6 +187,16 @@
       }
 
       @media (max-width: 768px) {
+         .search-form {
+            flex-direction: column;
+            align-items: stretch;
+         }
+
+         .search-form input,
+         .search-form button {
+            width: 100%;
+         }
+
          #results {
             grid-template-columns: repeat(2, 1fr);
          }
@@ -200,18 +210,29 @@
          .logo {
             font-size: 2rem;
          }
+
+         .result-item {
+            height: auto;
+         }
+
+         .image-container {
+            height: 140px;
+         }
+
+         .search-notes {
+            font-size: 0.85rem;
+         }
       }
    </style>
 </head>
 
 <body>
    <div class="container">
-      <div class="logo">Drug Search</div>
+      <div class="logo">Drugs Search</div>
 
       <div class="search-box">
          <form class="search-form" onsubmit="search(); return false;">
             <input type="text" id="name" placeholder="Search medications..." autofocus />
-            <div class="divider"></div>
             <input type="number" id="tolerance" placeholder="Tolerance" min="0" max="10" />
             <button type="submit">Search</button>
          </form>
