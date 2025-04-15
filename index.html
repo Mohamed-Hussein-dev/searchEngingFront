@@ -233,14 +233,14 @@
       <div class="search-box">
          <form class="search-form" onsubmit="search(); return false;">
             <input type="text" id="name" placeholder="Search medications..." autofocus />
-            <input type="number" id="tolerance" placeholder="Tolerance" min="0" max="10" />
+            <input type="number" id="tolerance" placeholder="Tolerance" min="0" max="100" />
             <button type="submit">Search</button>
          </form>
          <div class="search-notes">
             <strong>Search Tips:</strong>
             <ul>
                <li>Enter at least 3 characters of the drug name</li>
-               <li>Tolerance = number of allowed typos (default: 50% of name length)</li>
+               <li>Tolerance = number of allowed typos (default: 10)</li>
                <li>Tolerance can be 0 for exact match</li>
                <li>Database contains 10,000 entries - some medications might be missing</li>
             </ul>
@@ -283,7 +283,7 @@
             if (!name) throw new Error('Please enter a drug name');
             if (name.length < 3) throw new Error('Minimum 3 characters required');
 
-            const tolerance = toleranceInput === '' ? Math.ceil(name.length * 0.5) : parseInt(toleranceInput);
+            const tolerance = toleranceInput === '' ? 10 : parseInt(toleranceInput);
 
             const response = await fetch(
                `https://search-engine-api.runasp.net/api/SearchEngine/search?name=${encodeURIComponent(name)}&tolerance=${tolerance}`
