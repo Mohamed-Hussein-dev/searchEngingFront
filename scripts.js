@@ -81,7 +81,7 @@ async function fetchPage(pageIndex = 1) {
 
    try {
       const resp = await fetch(
-         `https://localhost:7285/api/SearchEngine/search`
+         `https://search-engine-api.runasp.net/api/SearchEngine/search`
          + `?name=${encodeURIComponent(name)}`
          + `&tolerance=${tolerance}`
          + `&pageIndex=${pageIndex}`
